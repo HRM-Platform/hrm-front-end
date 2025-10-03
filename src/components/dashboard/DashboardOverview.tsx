@@ -34,7 +34,7 @@ export function DashboardOverview() {
         <StatCard
           title="Total Employees"
           value="247"
-          change="+12 from last month"
+          change="+15 from last month"
           changeType="positive"
           icon={Users}
           gradient="from-primary to-primary/80"

@@ -1,10 +1,12 @@
+"use client";
+
 import { useState } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
 import { EmployeeList } from "@/components/employees/EmployeeList";
 import { AttendanceTracking } from "@/components/attendance/AttendanceTracking";
 
-const Index = () => {
+export default function Home() {
   const [activeSection, setActiveSection] = useState("dashboard");
 
   const renderContent = () => {
@@ -51,6 +53,4 @@ const Index = () => {
       </main>
     </div>
   );
-};
-
-export default Index;
+}

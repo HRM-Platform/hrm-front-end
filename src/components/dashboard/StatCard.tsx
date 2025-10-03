@@ -11,17 +11,19 @@ interface StatCardProps {
   gradient?: string;
 }
 
-export function StatCard({ 
-  title, 
-  value, 
-  change, 
-  changeType = "neutral", 
+export function StatCard({
+  title,
+  value,
+  change,
+  changeType = "neutral",
   icon: Icon,
-  gradient = "from-primary to-primary/80"
+  gradient = "from-primary to-primary/80",
 }: StatCardProps) {
   return (
     <Card className="relative overflow-hidden">
-      <div className={cn("absolute inset-0 bg-gradient-to-br opacity-5", gradient)} />
+      <div
+        className={cn("absolute inset-0 bg-gradient-to-br opacity-5", gradient)}
+      />
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
@@ -31,12 +33,14 @@ export function StatCard({
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
         {change && (
-          <p className={cn(
-            "text-xs",
-            changeType === "positive" && "text-success",
-            changeType === "negative" && "text-destructive",
-            changeType === "neutral" && "text-muted-foreground"
-          )}>
+          <p
+            className={cn(
+              "text-xs",
+              changeType === "positive" && "text-success",
+              changeType === "negative" && "text-destructive",
+              changeType === "neutral" && "text-muted-foreground"
+            )}
+          >
             {change}
           </p>
         )}
