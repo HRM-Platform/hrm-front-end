@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { leaveService } from "@/services/leave.service";
-import type { CreateLeaveInput, ApproveLeaveInput } from "@/types";
+import { leaveService } from "@/lib/services/leave.service";
+import type { CreateLeaveInput, ApproveLeaveInput } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
 
 // Query Keys

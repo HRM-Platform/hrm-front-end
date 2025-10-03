@@ -1,56 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
-import { EmployeeList } from "@/components/employees/EmployeeList";
-import { AttendanceTracking } from "@/components/attendance/AttendanceTracking";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState("dashboard");
+  const router = useRouter();
 
-  const renderContent = () => {
-    switch (activeSection) {
-      case "dashboard":
-        return <DashboardOverview />;
-      case "employees":
-        return <EmployeeList />;
-      case "attendance":
-        return <AttendanceTracking />;
-      case "leave":
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Leave Management</h2>
-            <p className="text-muted-foreground">Leave management features coming soon...</p>
-          </div>
-        );
-      case "payroll":
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Payroll</h2>
-            <p className="text-muted-foreground">Payroll management features coming soon...</p>
-          </div>
-        );
-      case "settings":
-        return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold">Settings</h2>
-            <p className="text-muted-foreground">System settings coming soon...</p>
-          </div>
-        );
-      default:
-        return <DashboardOverview />;
-    }
-  };
+  useEffect(() => {
+    router.push("/dashboard");
+  }, [router]);
 
   return (
-    <div className="flex h-screen bg-background">
-      <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
-      <main className="flex-1 overflow-auto">
-        <div className="container mx-auto p-6">
-          {renderContent()}
-        </div>
-      </main>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+        <p className="mt-4 text-muted-foreground">Redirecting...</p>
+      </div>
     </div>
   );
 }

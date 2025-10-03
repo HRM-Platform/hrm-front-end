@@ -1,5 +1,5 @@
 import { api } from "@/lib/api/client";
-import type { DashboardStats, RecentActivity, AttendanceData, ApiResponse } from "@/types";
+import type { DashboardStats, RecentActivity, AttendanceData, ApiResponse } from "@/lib/types";
 
 export const dashboardService = {
   // Get dashboard statistics

@@ -5,7 +5,7 @@ import type {
   ApproveLeaveInput,
   ApiResponse,
   PaginatedResponse,
-} from "@/types";
+} from "@/lib/types";
 
 export const leaveService = {
   // Get all leave requests

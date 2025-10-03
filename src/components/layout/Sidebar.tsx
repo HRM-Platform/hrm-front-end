@@ -1,12 +1,12 @@
-import { 
-  Users, 
-  Calendar, 
-  Clock, 
-  DollarSign, 
-  BarChart3, 
+import {
+  Users,
+  Calendar,
+  Clock,
+  DollarSign,
+  BarChart3,
   Settings,
   LogOut,
-  Building
+  Building,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -30,9 +30,11 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
     <div className="flex h-screen w-64 flex-col bg-sidebar">
       <div className="flex h-16 items-center border-b border-sidebar-border px-6">
         <Building className="h-8 w-8 text-sidebar-primary" />
-        <h1 className="ml-3 text-xl font-bold text-sidebar-foreground">HRIS Pro</h1>
+        <h1 className="ml-3 text-xl font-bold text-sidebar-foreground">
+          HRIS Pro
+        </h1>
       </div>
-      
+
       <nav className="flex-1 space-y-2 px-4 py-6">
         {navigationItems.map((item) => {
           const Icon = item.icon;
@@ -42,7 +44,8 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
               variant="ghost"
               className={cn(
                 "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                activeSection === item.id && "bg-sidebar-accent text-sidebar-primary font-medium"
+                activeSection === item.id &&
+                  "bg-sidebar-accent text-sidebar-primary font-medium"
               )}
               onClick={() => onSectionChange(item.id)}
             >
@@ -52,7 +55,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
           );
         })}
       </nav>
-      
+
       <div className="border-t border-sidebar-border p-4">
         <Button
           variant="ghost"

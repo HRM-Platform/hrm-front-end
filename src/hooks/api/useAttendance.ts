@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { attendanceService } from "@/services/attendance.service";
-import type { ClockInInput, ClockOutInput } from "@/types";
+import { attendanceService } from "@/lib/services/attendance.service";
+import type { ClockInInput, ClockOutInput } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
 
 // Query Keys

@@ -5,7 +5,7 @@ import type {
   ClockOutInput,
   ApiResponse,
   PaginatedResponse,
-} from "@/types";
+} from "@/lib/types";
 
 export const attendanceService = {
   // Get today's attendance

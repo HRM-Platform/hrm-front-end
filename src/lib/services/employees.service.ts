@@ -5,7 +5,7 @@ import type {
   UpdateEmployeeInput,
   ApiResponse,
   PaginatedResponse,
-} from "@/types";
+} from "@/lib/types";
 
 export const employeesService = {
   // Get all employees

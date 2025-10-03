@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { employeesService } from "@/services/employees.service";
-import type { CreateEmployeeInput, UpdateEmployeeInput } from "@/types";
+import { employeesService } from "@/lib/services/employees.service";
+import type { CreateEmployeeInput, UpdateEmployeeInput } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
 
 // Query Keys
