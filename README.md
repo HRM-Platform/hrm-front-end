@@ -1,73 +1,196 @@
-# Welcome to your Lovable project
+# HRIS Frontend
 
-## Project info
+A modern Human Resource Information System (HRIS) frontend built with Next.js, TypeScript, and React Query.
 
-**URL**: https://lovable.dev/projects/ce58bf0b-3478-45ca-aa0e-d09c842cecf3
+## 🚀 Features
 
-## How can I edit this code?
+- **Employee Management** - Manage employee records, departments, and positions
+- **Attendance Tracking** - Clock in/out system with real-time tracking
+- **Leave Management** - Request and approve leave applications
+- **Dashboard Analytics** - Real-time statistics and insights
+- **API Integration** - Full REST API integration with React Query
+- **Type-Safe** - Complete TypeScript support
+- **Modern UI** - Built with shadcn/ui and Tailwind CSS
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use Lovable**
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type safety
+- **React Query** - Data fetching and state management
+- **Axios** - HTTP client
+- **shadcn/ui** - UI components
+- **Tailwind CSS** - Styling
+- **Lucide React** - Icons
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ce58bf0b-3478-45ca-aa0e-d09c842cecf3) and start prompting.
+## 📦 Installation
 
-Changes made via Lovable will be committed automatically to this repo.
+```bash
+# Clone the repository
+git clone <your-repo-url>
 
-**Use your preferred IDE**
+# Navigate to project directory
+cd hris-frontend
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+# Install dependencies
+npm install
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+# Set up environment variables
+cp .env.local.example .env.local
+# Edit .env.local with your API URL
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Run development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🔧 Available Scripts
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
 
-**Use GitHub Codespaces**
+## 🌐 Environment Variables
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Create a `.env.local` file in the root directory:
 
-## What technologies are used for this project?
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+```
 
-This project is built with:
+## 📚 Documentation
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- [API Integration Guide](./API_INTEGRATION.md) - Complete API integration documentation
+- [Component Documentation](./docs/components.md) - Component usage guide
 
-## How can I deploy this project?
+## 🗂️ Project Structure
 
-Simply open [Lovable](https://lovable.dev/projects/ce58bf0b-3478-45ca-aa0e-d09c842cecf3) and click on Share -> Publish.
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx         # Root layout
+│   ├── page.tsx           # Home page
+│   ├── not-found.tsx      # 404 page
+│   └── providers.tsx      # React Query & UI providers
+├── components/
+│   ├── attendance/        # Attendance components
+│   ├── dashboard/         # Dashboard components
+│   ├── employees/         # Employee components
+│   ├── layout/            # Layout components
+│   └── ui/                # UI components (shadcn)
+├── hooks/
+│   ├── api/               # React Query hooks
+│   │   ├── useEmployees.ts
+│   │   ├── useAttendance.ts
+│   │   ├── useDashboard.ts
+│   │   └── useLeave.ts
+│   └── use-toast.ts       # Toast notifications
+├── lib/
+│   ├── api/
+│   │   └── client.ts      # Axios API client
+│   └── utils.ts           # Utility functions
+├── services/              # API service layer
+│   ├── employees.service.ts
+│   ├── attendance.service.ts
+│   ├── dashboard.service.ts
+│   └── leave.service.ts
+└── types/
+    └── index.ts           # TypeScript types
+```
 
-## Can I connect a custom domain to my Lovable project?
+## 🔌 API Integration
 
-Yes, you can!
+This frontend is designed to work with a REST API backend. See [API_INTEGRATION.md](./API_INTEGRATION.md) for:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- API endpoint structure
+- Request/response formats
+- Authentication setup
+- Usage examples
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 🎨 UI Components
+
+Built with [shadcn/ui](https://ui.shadcn.com/) components:
+
+- Avatar
+- Badge
+- Button
+- Card
+- Input
+- Progress
+- Toast/Sonner
+- Tooltip
+
+## 🔐 Authentication
+
+The API client supports JWT token authentication. Tokens are stored in localStorage and automatically included in requests.
+
+```typescript
+// Login
+localStorage.setItem("auth_token", "your-jwt-token");
+
+// Logout
+localStorage.removeItem("auth_token");
+```
+
+## 📱 Responsive Design
+
+Fully responsive design that works on:
+- Desktop (1024px+)
+- Tablet (768px - 1023px)
+- Mobile (< 768px)
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+```bash
+npm run build
+# Deploy to Vercel
+```
+
+### Docker
+
+```dockerfile
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 👥 Support
+
+For support, email support@your-domain.com or open an issue in the repository.
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [React Query](https://tanstack.com/query/latest)
