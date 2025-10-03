@@ -1,15 +1,18 @@
+"use client";
+
 import { StatCard } from "./StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Users, 
-  Clock, 
-  Calendar, 
+import {
+  Users,
+  Clock,
+  Calendar,
   DollarSign,
   CheckCircle,
   BarChart3
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 const recentActivities = [
   { id: 1, type: "leave", message: "John Doe requested 3 days leave", time: "2 hours ago", status: "pending" },
@@ -27,6 +30,8 @@ const attendanceData = [
 ];
 
 export function DashboardOverview() {
+  const router = useRouter();
+
   return (
     <div className="space-y-6">
       {/* Stats Grid */}
@@ -122,7 +127,10 @@ export function DashboardOverview() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
-            <button className="flex items-center gap-3 rounded-lg border border-border p-4 text-left transition-colors hover:bg-accent hover:text-accent-foreground">
+            <button
+              onClick={() => router.push('/login')}
+              className="flex items-center gap-3 rounded-lg border border-border p-4 text-left transition-colors hover:bg-accent hover:text-accent-foreground"
+            >
               <Users className="h-8 w-8 text-primary" />
               <div>
                 <p className="font-medium">Add Employee</p>
