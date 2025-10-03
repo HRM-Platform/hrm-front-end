@@ -7,5 +7,5 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AppLayout activeSection="dashboard">{children}</AppLayout>;
+  return <AppLayout>{children}</AppLayout>;
 }

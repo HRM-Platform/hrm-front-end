@@ -54,29 +54,29 @@ export function AttendanceTracking() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Attendance Tracking</h2>
           <p className="text-muted-foreground">Today's attendance overview</p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2 w-full sm:w-auto">
           <Clock className="h-4 w-4" />
           Clock In/Out
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
         {attendanceStats.map((stat) => {
           const Icon = stat.icon;
           return (
             <Card key={stat.label}>
-              <CardContent className="flex items-center justify-between p-6">
+              <CardContent className="flex items-center justify-between p-4 sm:p-6">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
-                  <p className="text-2xl font-bold">{stat.count}</p>
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground">{stat.label}</p>
+                  <p className="text-xl sm:text-2xl font-bold">{stat.count}</p>
                 </div>
-                <Icon className={`h-8 w-8 ${stat.color}`} />
+                <Icon className={`h-6 w-6 sm:h-8 sm:w-8 ${stat.color}`} />
               </CardContent>
             </Card>
           );
@@ -94,37 +94,42 @@ export function AttendanceTracking() {
         <CardContent>
           <div className="space-y-4">
             {todayAttendance.map((record) => (
-              <div key={record.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-10 w-10">
+              <div key={record.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-border rounded-lg gap-4">
+                {/* Employee Info */}
+                <div className="flex items-center gap-3 min-w-0">
+                  <Avatar className="h-10 w-10 flex-shrink-0">
                     <AvatarFallback className="bg-primary text-primary-foreground">
                       {record.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <p className="font-medium">{record.name}</p>
-                    <p className="text-sm text-muted-foreground">{record.department}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium truncate">{record.name}</p>
+                    <p className="text-sm text-muted-foreground truncate">{record.department}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6">
-                  <div className="text-center">
+                {/* Time Info - Responsive Grid */}
+                <div className="flex items-center gap-3 sm:gap-6 flex-wrap sm:flex-nowrap">
+                  <div className="text-center min-w-[70px]">
                     <p className="text-xs text-muted-foreground">Clock In</p>
-                    <p className="font-medium">{record.clockIn}</p>
+                    <p className="text-sm sm:text-base font-medium">{record.clockIn}</p>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center min-w-[70px]">
                     <p className="text-xs text-muted-foreground">Clock Out</p>
-                    <p className="font-medium">{record.clockOut}</p>
+                    <p className="text-sm sm:text-base font-medium">{record.clockOut}</p>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center min-w-[70px]">
                     <p className="text-xs text-muted-foreground">Hours</p>
-                    <p className="font-medium">{record.workingHours}</p>
+                    <p className="text-sm sm:text-base font-medium">{record.workingHours}</p>
                   </div>
-                  <Badge variant={
-                    record.status === "present" ? "default" :
-                    record.status === "late" ? "secondary" :
-                    "destructive"
-                  }>
+                  <Badge
+                    className="ml-auto sm:ml-0"
+                    variant={
+                      record.status === "present" ? "default" :
+                      record.status === "late" ? "secondary" :
+                      "destructive"
+                    }
+                  >
                     {record.status}
                   </Badge>
                 </div>

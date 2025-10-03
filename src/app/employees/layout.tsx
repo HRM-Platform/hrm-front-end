@@ -7,5 +7,5 @@ export default function EmployeesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AppLayout activeSection="employees">{children}</AppLayout>;
+  return <AppLayout>{children}</AppLayout>;
 }

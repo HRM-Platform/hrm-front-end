@@ -7,5 +7,5 @@ export default function LeaveLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AppLayout activeSection="leave">{children}</AppLayout>;
+  return <AppLayout>{children}</AppLayout>;
 }

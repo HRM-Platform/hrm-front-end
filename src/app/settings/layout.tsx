@@ -7,5 +7,5 @@ export default function SettingsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AppLayout activeSection="settings">{children}</AppLayout>;
+  return <AppLayout>{children}</AppLayout>;
 }

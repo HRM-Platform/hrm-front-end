@@ -7,5 +7,5 @@ export default function AttendanceLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AppLayout activeSection="attendance">{children}</AppLayout>;
+  return <AppLayout>{children}</AppLayout>;
 }
