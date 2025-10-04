@@ -194,3 +194,4 @@ For support, email support@your-domain.com or open an issue in the repository.
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [React Query](https://tanstack.com/query/latest)
+# hrm-front-end
