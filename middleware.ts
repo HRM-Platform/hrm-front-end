@@ -1,31 +1,23 @@
+// middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(req: NextRequest) {
-  const token = req.cookies.get('auth_token')?.value;
-  console.log(token);
-  const { pathname } = req.nextUrl;
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get('access_token')?.value;
 
-  // Allow public routes
-  if (
-    pathname.startsWith('/login') ||
-    pathname.startsWith('/register') ||
-    pathname.startsWith('/api')
-  ) {
-    return NextResponse.next();
+  // If not logged in → redirect to login
+  if (!token && request.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // Redirect to login if not authenticated
-  if (!token) {
-    const loginUrl = new URL('/login', req.url);
-    return NextResponse.redirect(loginUrl);
+  // If logged in → don’t allow visiting login page
+  if (token && request.nextUrl.pathname === '/login') {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  // User is authenticated, allow request
   return NextResponse.next();
 }
 
-// Apply middleware to protected routes
 export const config = {
-  matcher: ['/dashboard/:path*', '/profile/:path*', '/settings/:path*'],
+  matcher: ['/dashboard/:path*', '/login'], // applies to these routes
 };

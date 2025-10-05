@@ -1,36 +1,55 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "../index.css";
-import { Providers } from "./providers";
+'use client';
 
-const inter = Inter({ subsets: ["latin"] });
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Inter } from 'next/font/google';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { Providers } from './providers';
+import '../css/global.css';
 
-export const metadata: Metadata = {
-  title: "HRIS Pro - Human Resource Information System",
-  description: "Professional HRIS system for managing employees, attendance, leave, and payroll",
-  authors: [{ name: "HRIS Pro" }],
-  openGraph: {
-    title: "HRIS Pro - Human Resource Information System",
-    description: "Professional HRIS system for managing employees, attendance, leave, and payroll",
-    type: "website",
-    images: ["https://lovable.dev/opengraph-image-p98pqg.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@lovable_dev",
-    images: ["https://lovable.dev/opengraph-image-p98pqg.png"],
-  },
-};
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const excludedRoutes = ['/login', '/register', '/forgot-password'];
+  const isExcluded = excludedRoutes.some((route) => pathname.startsWith(route));
+
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+    if (!token && !isExcluded) {
+      router.push('/login');
+    }
+  }, [pathname, isExcluded, router]);
+
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
+      <body className={`${inter.className} bg-gray-50 text-gray-900`}>
+        <Providers>
+          {isExcluded ? (
+            <main className="min-h-screen">{children}</main>
+          ) : (
+            <div className="flex flex-col h-screen">
+              <Header onSidebarToggle={() => setSidebarOpen(true)} />
+              <div className="flex flex-1 overflow-hidden">
+                <Sidebar
+                  isOpen={sidebarOpen}
+                  onClose={() => setSidebarOpen(false)}
+                />
+                <main className="flex-1 overflow-y-auto p-4">{children}</main>
+              </div>
+              <Footer />
+            </div>
+          )}
+        </Providers>
       </body>
     </html>
   );
