@@ -24,7 +24,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
       <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md space-y-6">
-        <h2 className="text-2xl font-bold text-center text-gray-800">
+        <h2 className="text-sm font-bold text-center text-gray-800">
           {isEmailStep ? 'Enter your Email' : 'Enter your Password'}
         </h2>
 
