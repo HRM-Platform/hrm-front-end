@@ -18,11 +18,14 @@ export default function LoginPage() {
     login,
   } = useLoginFlow();
 
+  const isEmailStep = step === 1;
+  const isPasswordStep = step === 2;
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
       <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md space-y-6">
         <h2 className="text-2xl font-bold text-center text-gray-800">
-          {step === 1 ? 'Enter your Email' : 'Enter your Password'}
+          {isEmailStep ? 'Enter your Email' : 'Enter your Password'}
         </h2>
 
         {error && (
@@ -30,7 +33,7 @@ export default function LoginPage() {
         )}
 
         {/* Step 1: Email */}
-        {step === 1 && (
+        {isEmailStep && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -47,7 +50,7 @@ export default function LoginPage() {
             />
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !email}
               className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition"
             >
               {loading ? 'Checking...' : 'Next'}
@@ -56,7 +59,7 @@ export default function LoginPage() {
         )}
 
         {/* Step 2: Password */}
-        {step === 2 && (
+        {isPasswordStep && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -64,6 +67,15 @@ export default function LoginPage() {
             }}
             className="space-y-4"
           >
+            {/* Email shown but readonly */}
+            <input
+              type="email"
+              value={email}
+              readOnly
+              disabled
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 cursor-not-allowed"
+            />
+
             <input
               type="password"
               placeholder="Enter your password"
