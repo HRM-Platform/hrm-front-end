@@ -4,111 +4,117 @@ import axios, {
   AxiosResponse,
   AxiosError,
 } from 'axios';
+import { STATUS_MESSAGES } from '../statusMessages';
 
-// API configuration
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
-// Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_URL,
   timeout: 30000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// Request interceptor
+// ----------------------------
+// Helper to safely set headers
+// ----------------------------
+const setHeader = (config: AxiosRequestConfig, key: string, value: string) => {
+  config.headers = config.headers ?? {};
+  (config.headers as any)[key] = value;
+};
+
+// ----------------------------
+// Request Interceptor
+// ----------------------------
 apiClient.interceptors.request.use(
   (config) => {
-    // Add auth token if available
     const token = localStorage.getItem('auth_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    if (token) setHeader(config, 'Authorization', `Bearer ${token}`);
 
-    // Add API key if configured
     const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-    if (apiKey) {
-      config.headers['X-API-Key'] = apiKey;
-    }
+    if (apiKey) setHeader(config, 'X-API-Key', apiKey);
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
 
-// Response interceptor
+// ----------------------------
+// Response Interceptor
+// ----------------------------
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
+  (response: AxiosResponse) => response,
   (error: AxiosError) => {
-    // Handle common errors
-    if (error.response) {
-      switch (error.response.status) {
-        case 401:
-          // Unauthorized - clear token and redirect to login
-          localStorage.removeItem('auth_token');
-          if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-          }
-          break;
-        case 403:
-          console.error(
-            "Forbidden: You don't have permission to access this resource"
-          );
-          break;
-        case 404:
-          console.error('Not found: The requested resource was not found');
-          break;
-        case 500:
-          console.error('Server error: Something went wrong on the server');
-          break;
-        default:
-          console.error('API Error:', error.response.data);
+    const status = error.response?.status;
+    const responseData = error.response?.data || error.message || null;
+
+    // Attach status and data to the original error
+    (error as any).status = status || null;
+    (error as any).data = responseData;
+
+    if (status) {
+      if (status === 401) {
+        localStorage.removeItem('auth_token');
+        if (typeof window !== 'undefined') window.location.href = '/login';
       }
+
+      const message = STATUS_MESSAGES[status] || `Unexpected Error: ${status}`;
+      console.error(message, responseData);
     } else if (error.request) {
-      console.error('Network error: No response received from server');
+      console.error(
+        'Network error: No response received from server',
+        error.request
+      );
     } else {
-      console.error('Error:', error.message);
+      console.error('Error:', responseData);
     }
 
     return Promise.reject(error);
   }
 );
 
-// API wrapper functions
+// ----------------------------
+// API Wrapper Methods
+// ----------------------------
 export const api = {
-  get: <T = any>(
+  get: async <T = any>(
     url: string,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>> => apiClient.get<T>(url, config),
-
-  post: <T = any>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>> => apiClient.post<T>(url, data, config),
-
-  put: <T = any>(
+  ): Promise<T> => {
+    const response = await apiClient.get<T>(url, config);
+    return response.data;
+  },
+  post: async <T = any>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>> => apiClient.put<T>(url, data, config),
-
-  patch: <T = any>(
+  ): Promise<T> => {
+    const response = await apiClient.post<T>(url, data, config);
+    return response.data;
+  },
+  put: async <T = any>(
     url: string,
     data?: any,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>> => apiClient.patch<T>(url, data, config),
-
-  delete: <T = any>(
+  ): Promise<T> => {
+    const response = await apiClient.put<T>(url, data, config);
+    return response.data;
+  },
+  patch: async <T = any>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> => {
+    const response = await apiClient.patch<T>(url, data, config);
+    return response.data;
+  },
+  delete: async <T = any>(
     url: string,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>> => apiClient.delete<T>(url, config),
+  ): Promise<T> => {
+    const response = await apiClient.delete<T>(url, config);
+    return response.data;
+  },
 };
 
 export default apiClient;

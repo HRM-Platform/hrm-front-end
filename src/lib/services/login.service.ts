@@ -1,16 +1,8 @@
-import apiClient from '../api/client';
+import { api } from '../api/client';
 
 export interface LoginPayload {
   email: string;
   password: string;
-}
-
-export interface LoginResponse {
-  code: number;
-  status: string | boolean;
-  token?: string;
-  message?: string;
-  data?: UserData;
 }
 
 export interface UserData {
@@ -25,26 +17,54 @@ export interface UserData {
   updated_at: string;
 }
 
-/**
- * Calls the login API
- * @param payload { email, password }
- * @returns LoginResponse
- */
+export interface LoginResponse {
+  code: number;
+  status: string | boolean;
+  token?: string;
+  message?: string;
+  data?: UserData;
+}
+
+export interface ApiError {
+  status?: number | string | null;
+  code?: number | string | null;
+  message?: string;
+  data?: any;
+}
+
+// ----------------------------
+// Helper to normalize errors
+// ----------------------------
+const handleApiError = (error: any): ApiError => ({
+  status: error?.status || null,
+  code: error?.code || null,
+  message: error?.data?.message || 'Something went wrong',
+  data: error?.data || null,
+});
+
+// ----------------------------
+// Auth Services
+// ----------------------------
 export const loginUser = async (
   payload: LoginPayload
 ): Promise<LoginResponse> => {
   try {
-    const response = await apiClient.post<LoginResponse>(
-      '/auth/login',
-      payload
-    );
-    return response.data;
+    // api.post automatically returns response.data
+    const data = await api.post<LoginResponse>('/auth/login', payload);
+    return data;
   } catch (error: any) {
-    // Handle error and normalize the response
-    return {
-      status: 'success',
-      code: error?.code,
-      message: error.response?.data?.message || 'Something went wrong',
-    };
+    // Normalize the error
+    throw handleApiError(error);
+  }
+};
+
+export const checkEmail = async (email: string) => {
+  try {
+    const data = await api.post('auth/check-email', {
+      email,
+    });
+    return data;
+  } catch (error: any) {
+    throw handleApiError(error);
   }
 };

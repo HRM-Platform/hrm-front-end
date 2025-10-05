@@ -1,0 +1,20 @@
+// lib/statusMessages.ts
+export const STATUS_MESSAGES: Record<number, string> = {
+  400: 'Bad Request: The request was invalid or cannot be served.',
+  401: 'Unauthorized: Please login to access this resource.',
+  402: 'Payment Required: Payment is required to proceed.',
+  403: "Forbidden: You don't have permission to access this resource.",
+  404: 'Not Found: The requested resource was not found.',
+  405: 'Method Not Allowed: HTTP method is not allowed for this endpoint.',
+  406: 'Not Acceptable: The requested format is not supported.',
+  408: 'Request Timeout: The server timed out waiting for the request.',
+  409: 'Conflict: There was a conflict with the current state of the resource.',
+  422: 'Unprocessable Entity: The request was well-formed but could not be processed.',
+  429: 'Too Many Requests: You have sent too many requests in a given amount of time.',
+  500: 'Internal Server Error: Something went wrong on the server.',
+  501: 'Not Implemented: The server does not support this functionality.',
+  502: 'Bad Gateway: Received an invalid response from the upstream server.',
+  503: 'Service Unavailable: The server is currently unavailable.',
+  504: 'Gateway Timeout: The server did not receive a timely response.',
+  505: 'HTTP Version Not Supported: The server does not support the HTTP protocol version.',
+};
