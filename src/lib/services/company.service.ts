@@ -27,3 +27,13 @@ export async function createCompany(payload: CompanyPayload): Promise<Company> {
   const response = await api.post('/companies', payload);
   return response.data;
 }
+
+export async function updateCompany(company: Company): Promise<Company> {
+  const res = await fetch(`/api/companies/${company.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(company),
+  });
+  if (!res.ok) throw new Error('Failed to update company');
+  return res.json();
+}

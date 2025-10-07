@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,8 +23,8 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/components/ui/use-toast';
 import { Company, getCompanies } from '@/lib/services/company.service';
+import CompanyDrawer from './CompanyDrawer';
 import { Badge } from '@/components/ui/badge';
-import CompanyDrawer from '@/components/company/CompanyDrawer';
 
 export default function CompanyTable() {
   const { toast } = useToast();
@@ -33,66 +33,58 @@ export default function CompanyTable() {
   const [page, setPage] = useState(1);
   const [perPage] = useState(5);
   const [loading, setLoading] = useState(false);
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
 
-  useEffect(() => {
-    async function fetchCompanies() {
-      try {
-        setLoading(true);
-        const data = await getCompanies();
-        setCompanies(data);
-      } catch (error) {
-        toast({
-          title: 'Error',
-          description: 'Failed to fetch companies. Please try again.',
-          variant: 'destructive',
-        });
-      } finally {
-        setLoading(false);
-      }
+  const fetchCompanies = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getCompanies();
+      setCompanies(data);
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch companies.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
     }
-    fetchCompanies();
   }, [toast]);
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return companies;
-    return companies.filter((comp) => comp.name.toLowerCase().includes(q));
-  }, [query, companies]);
+  useEffect(() => {
+    fetchCompanies();
+  }, [fetchCompanies]);
 
+  const filtered = useMemo(
+    () =>
+      query
+        ? companies.filter((c) =>
+            c.name.toLowerCase().includes(query.toLowerCase())
+          )
+        : companies,
+    [companies, query]
+  );
   const pageCount = Math.max(1, Math.ceil(filtered.length / perPage));
-  const paged = useMemo(() => {
-    const start = (page - 1) * perPage;
-    return filtered.slice(start, start + perPage);
-  }, [filtered, page, perPage]);
+  const paged = useMemo(
+    () => filtered.slice((page - 1) * perPage, page * perPage),
+    [filtered, page, perPage]
+  );
 
-  function handlePrev() {
-    setPage((p) => Math.max(1, p - 1));
-  }
-  function handleNext() {
-    setPage((p) => Math.min(pageCount, p + 1));
-  }
-
-  function handleEdit(company: Company) {
+  const handleEdit = (company: Company) => {
     setSelectedCompany(company);
     setIsDrawerOpen(true);
-  }
-
-  function handleDelete(id: string) {
-    toast({
-      title: 'Delete Company',
-      description: `Company ID: ${id} removed.`,
-      variant: 'destructive',
-    });
-  }
-
+  };
+  const handleDelete = (id: string) => {
+    setCompanies((prev) => prev.filter((c) => c.id !== id));
+  };
   const handleSaveCompany = (updated: Company) => {
     setCompanies((prev) =>
       prev.map((c) => (c.id === updated.id ? updated : c))
     );
   };
+  const handlePrev = () => setPage((p) => Math.max(1, p - 1));
+  const handleNext = () => setPage((p) => Math.min(pageCount, p + 1));
 
   return (
     <Card className="w-full shadow-md rounded-2xl border border-gray-100">
@@ -100,7 +92,6 @@ export default function CompanyTable() {
         <CardTitle className="text-xl font-semibold text-gray-800">
           🏢 Companies
         </CardTitle>
-
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <div className="relative w-full sm:w-72">
             <Input
@@ -116,8 +107,13 @@ export default function CompanyTable() {
               <Search className="h-4 w-4 text-gray-400" />
             </div>
           </div>
-
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow">
+          <Button
+            className="bg-blue-600 hover:bg-blue-700 text-white shadow"
+            onClick={() => {
+              setSelectedCompany(null);
+              setIsDrawerOpen(true);
+            }}
+          >
             <Plus className="h-4 w-4 mr-1" /> New
           </Button>
         </div>
@@ -144,49 +140,40 @@ export default function CompanyTable() {
                   </TableHead>
                 </TableRow>
               </TableHeader>
-
               <TableBody>
                 {paged.length > 0 ? (
-                  paged.map((company, idx) => (
+                  paged.map((c, i) => (
                     <TableRow
-                      key={company.id}
+                      key={c.id}
                       className="hover:bg-gray-50 transition-colors duration-150"
                     >
-                      <TableCell className="font-medium text-gray-700">
-                        {(page - 1) * perPage + idx + 1}
-                      </TableCell>
-                      <TableCell className="font-medium text-gray-800">
-                        {company.name}
-                      </TableCell>
+                      <TableCell>{(page - 1) * perPage + i + 1}</TableCell>
+                      <TableCell>{c.name}</TableCell>
                       <TableCell>
                         <Badge variant="secondary" className="text-xs">
-                          {new Date(company.created_at).toLocaleDateString()}
+                          {new Date(c.created_at).toLocaleDateString()}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline" className="text-xs">
-                          {new Date(company.updated_at).toLocaleDateString()}
+                          {new Date(c.updated_at).toLocaleDateString()}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex justify-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="hover:bg-blue-50"
-                            onClick={() => handleEdit(company)}
-                          >
-                            <Edit className="h-4 w-4 text-blue-600" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="hover:bg-red-50"
-                            onClick={() => handleDelete(company.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-red-500" />
-                          </Button>
-                        </div>
+                      <TableCell className="text-center flex justify-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleEdit(c)}
+                        >
+                          <Edit className="h-4 w-4 text-blue-600" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleDelete(c.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))
@@ -202,44 +189,45 @@ export default function CompanyTable() {
                 )}
               </TableBody>
             </Table>
-          </div>
-        )}
 
-        {!loading && companies.length > 0 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t bg-gray-50 rounded-b-2xl">
-            <div className="text-sm text-gray-500">
-              Showing {(page - 1) * perPage + 1} -{' '}
-              {Math.min(page * perPage, filtered.length)} of {filtered.length}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePrev}
-                disabled={page === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <span className="text-sm font-medium text-gray-600">
-                Page {page} / {pageCount}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleNext}
-                disabled={page === pageCount}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+            {companies.length > 0 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t bg-gray-50 rounded-b-2xl">
+                <div className="text-sm text-gray-500">
+                  Showing {(page - 1) * perPage + 1} -{' '}
+                  {Math.min(page * perPage, filtered.length)} of{' '}
+                  {filtered.length}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePrev}
+                    disabled={page === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm font-medium text-gray-600">
+                    Page {page} / {pageCount}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleNext}
+                    disabled={page === pageCount}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </CardContent>
+
       <CompanyDrawer
         visible={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
         company={selectedCompany}
+        onClose={() => setIsDrawerOpen(false)}
         onSave={handleSaveCompany}
       />
     </Card>
