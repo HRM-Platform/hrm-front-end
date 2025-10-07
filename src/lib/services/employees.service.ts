@@ -1,16 +1,22 @@
-import { api } from "@/lib/api/client";
+import { api } from '@/lib/api/client';
 import type {
   Employee,
   CreateEmployeeInput,
   UpdateEmployeeInput,
   ApiResponse,
   PaginatedResponse,
-} from "@/lib/types";
+} from '@/lib/types';
 
 export const employeesService = {
   // Get all employees
-  getAll: async (params?: { page?: number; limit?: number; search?: string }) => {
-    const response = await api.get<PaginatedResponse<Employee>>("/employees", { params });
+  getAll: async (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) => {
+    const response = await api.get<PaginatedResponse<Employee>>('/employees', {
+      params,
+    });
     return response.data;
   },
 
@@ -22,13 +28,16 @@ export const employeesService = {
 
   // Create new employee
   create: async (data: CreateEmployeeInput) => {
-    const response = await api.post<ApiResponse<Employee>>("/employees", data);
+    const response = await api.post<ApiResponse<Employee>>('/employees', data);
     return response.data;
   },
 
   // Update employee
   update: async (id: number, data: UpdateEmployeeInput) => {
-    const response = await api.put<ApiResponse<Employee>>(`/employees/${id}`, data);
+    const response = await api.put<ApiResponse<Employee>>(
+      `/employees/${id}`,
+      data
+    );
     return response.data;
   },
 
@@ -40,13 +49,17 @@ export const employeesService = {
 
   // Get employees by department
   getByDepartment: async (department: string) => {
-    const response = await api.get<ApiResponse<Employee[]>>(`/employees/department/${department}`);
+    const response = await api.get<ApiResponse<Employee[]>>(
+      `/employees/department/${department}`
+    );
     return response.data;
   },
 
   // Get employees by status
-  getByStatus: async (status: "active" | "on-leave" | "inactive") => {
-    const response = await api.get<ApiResponse<Employee[]>>(`/employees/status/${status}`);
+  getByStatus: async (status: 'active' | 'on-leave' | 'inactive') => {
+    const response = await api.get<ApiResponse<Employee[]>>(
+      `/employees/status/${status}`
+    );
     return response.data;
   },
 };

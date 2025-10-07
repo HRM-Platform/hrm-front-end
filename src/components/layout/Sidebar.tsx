@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Users,
@@ -10,19 +10,20 @@ import {
   LogOut,
   Building,
   X,
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const navigationItems = [
-  { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
-  { href: "/employees", label: "Employees", icon: Users },
-  { href: "/attendance", label: "Attendance", icon: Clock },
-  { href: "/leave", label: "Leave Management", icon: Calendar },
-  { href: "/payroll", label: "Payroll", icon: DollarSign },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
+  { href: '/company', label: 'Company', icon: Building },
+  { href: '/employees', label: 'Employees', icon: Users },
+  { href: '/attendance', label: 'Attendance', icon: Clock },
+  { href: '/leave', label: 'Leave Management', icon: Calendar },
+  { href: '/payroll', label: 'Payroll', icon: DollarSign },
+  { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
 interface SidebarProps {
@@ -46,8 +47,8 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 flex h-screen w-64 flex-col bg-sidebar transition-transform duration-300 ease-in-out lg:translate-x-0",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          'fixed lg:static inset-y-0 left-0 z-50 flex h-screen w-64 flex-col bg-sidebar transition-transform duration-300 ease-in-out lg:translate-x-0',
+          isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-6">
@@ -77,9 +78,9 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                 <Button
                   variant="ghost"
                   className={cn(
-                    "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                    'w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
                     isActive &&
-                      "bg-sidebar-accent text-sidebar-primary font-medium"
+                      'bg-sidebar-accent text-sidebar-primary font-medium'
                   )}
                 >
                   <Icon className="mr-3 h-5 w-5" />
