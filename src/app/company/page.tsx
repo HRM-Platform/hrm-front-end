@@ -7,9 +7,10 @@ import { Company } from '@/lib/services/company.service';
 import { useCompanies } from '@/hooks/useCompanies';
 
 import Pagination from '@/components/ui/Pagination';
-import CompanyTableHeader from '@/app/company/CompanyTableHeader';
-import CompanyTableBody from '@/app/company/CompanyTableBody';
-import CompanyDrawer from '@/app/company/CompanyDrawer';
+
+import CompanyTableHeader from './CompanyTableHeader';
+import CompanyTableBody from './CompanyTableBody';
+import CompanyDrawer from './CompanyDrawer';
 
 export default function CompanyTable() {
   const { toast } = useToast();
@@ -44,33 +45,51 @@ export default function CompanyTable() {
   };
 
   return (
-    <Card className="w-full shadow-md rounded-2xl border border-gray-100">
-      <CardHeader>
-        <CompanyTableHeader
-          query={query}
-          setQuery={setQuery}
-          onNew={() => setIsDrawerOpen(true)}
-          onRefresh={refresh}
+    <div className="w-full">
+      <Card className="w-full bg-white shadow-lg rounded-2xl border border-gray-100 hover:shadow-xl transition-all duration-300 ease-in-out">
+        {/* Header */}
+        <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-blue-50 to-blue-100 rounded-t-2xl px-6 py-4">
+          <CompanyTableHeader
+            query={query}
+            setQuery={setQuery}
+            onNew={() => setIsDrawerOpen(true)}
+            onRefresh={refresh}
+          />
+        </CardHeader>
+
+        {/* Table + Pagination */}
+        <CardContent className="p-0">
+          <div className="overflow-hidden rounded-b-2xl">
+            <div className="overflow-x-auto bg-white">
+              <CompanyTableBody
+                paged={paged}
+                loading={loading}
+                page={page}
+                perPage={10}
+                onEdit={handleEdit}
+              />
+            </div>
+
+            {!loading && paged.length > 0 && (
+              <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-center">
+                <Pagination
+                  page={page}
+                  pageCount={pageCount}
+                  onChange={setPage}
+                />
+              </div>
+            )}
+          </div>
+        </CardContent>
+
+        {/* Drawer */}
+        <CompanyDrawer
+          visible={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          company={selectedCompany}
+          onSave={handleSaveCompany}
         />
-      </CardHeader>
-      <CardContent className="p-0">
-        <CompanyTableBody
-          paged={paged}
-          loading={loading}
-          page={page}
-          perPage={10}
-          onEdit={handleEdit}
-        />
-        {!loading && paged.length > 0 && (
-          <Pagination page={page} pageCount={pageCount} onChange={setPage} />
-        )}
-      </CardContent>
-      <CompanyDrawer
-        visible={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        company={selectedCompany}
-        onSave={handleSaveCompany}
-      />
-    </Card>
+      </Card>
+    </div>
   );
 }

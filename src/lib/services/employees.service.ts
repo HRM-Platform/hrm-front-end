@@ -1,4 +1,3 @@
-import { api } from '@/lib/api/client';
 import type {
   Employee,
   CreateEmployeeInput,
@@ -6,9 +5,9 @@ import type {
   ApiResponse,
   PaginatedResponse,
 } from '@/lib/types';
+import api from '../api/api';
 
 export const employeesService = {
-  // Get all employees
   getAll: async (params?: {
     page?: number;
     limit?: number;

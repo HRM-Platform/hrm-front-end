@@ -45,7 +45,11 @@ export default function CompanyDrawer({
       }
 
       onSave(updated);
+
       message.success('Company saved successfully');
+
+      form.resetFields();
+
       onClose();
     } catch (error: any) {
       console.error('Failed to save company:', error);
