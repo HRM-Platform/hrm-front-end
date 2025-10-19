@@ -25,7 +25,7 @@ export async function getCompanies(): Promise<Company[]> {
  */
 export async function createCompany(payload: CompanyPayload): Promise<Company> {
   const response = await api.post('/companies', payload);
-  return response.data;
+  return response.data?.data;
 }
 
 export async function updateCompany(company: Company): Promise<Company> {
